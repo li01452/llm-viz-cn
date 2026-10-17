@@ -22,71 +22,55 @@ export function walkthrough07_Mlp(args: IWalkthroughArgs) {
     setInitialCamera(state, new Vec3(-154.755, 0.000, -460.042), new Vec3(289.100, -8.900, 2.298));
     wt.dimHighlightBlocks = [block.ln2.lnResid, block.mlpAct, block.mlpFc, block.mlpFcBias, block.mlpFcWeight, block.mlpProjBias, block.mlpProjWeight, block.mlpResult, block.mlpResidual];
 
-    commentary(wt)`
+    commentary(wt)`Transformer 的另一半是 _MLP（多层感知机）_，在这里也叫前馈网络。它逐个位置处理向量；不同位置之间的信息交换已经由注意力完成。
 
-The next half of the transformer block, after the self-attention, is the MLP (multi-layer
-perceptron). A bit of a mouthful, but here it's a simple neural network with two layers.
+进入 MLP 前，先做${c_blockRef('层归一化', block.ln2.lnResid)}。每个长度为 ${c_dimRef('C = 48', DimStyle.C)} 的向量，独立经过：
 
-Like with self-attention, we perform a ${c_blockRef('layer normalization', block.ln2.lnResid)} before the vectors enter the MLP.
+1. ${c_blockRef('线性变换', block.mlpFcWeight)}加${c_blockRef('偏置', block.mlpFcBias)}，把维度扩展到 ${c_dimRef('4 * C', DimStyle.C4)}。
 
-In the MLP, we put each of our ${c_dimRef('C = 48', DimStyle.C)} length column vectors (independently) through:
+2. 对每个元素应用 GELU 激活函数。
 
-1. A ${c_blockRef('linear transformation', block.mlpFcWeight)} with a ${c_blockRef('bias', block.mlpFcBias)} added, to a vector of length ${c_dimRef('4 * C', DimStyle.C4)}.
+3. 再做${c_blockRef('线性变换', block.mlpProjWeight)}加${c_blockRef('偏置', block.mlpProjBias)}，把维度缩回 ${c_dimRef('C', DimStyle.C)}。
 
-2. A GELU activation function (element-wise)
-
-3. A ${c_blockRef('linear transformation', block.mlpProjWeight)} with a ${c_blockRef('bias', block.mlpProjBias)} added, back to a vector of length ${c_dimRef('C', DimStyle.C)}
-
-Let's track one of those vectors:
-`;
+现在跟踪其中一列，观察“扩展 → 非线性变换 → 缩回”的过程。`;
     breakAfter();
 
     let t0_fadeOut = afterTime(null, 1.0);
 
     breakAfter();
 
-commentary(wt)`
-We first run through the matrix-vector multiplication with bias added, expanding the vector to length ${c_dimRef('4 * C', DimStyle.C4)}. (Note that the output matrix is transposed here.
-This is purely for vizualization purposes.)
-`;
+commentary(wt)`先做矩阵乘向量，再加偏置，将向量扩展为 ${c_dimRef('4 * C', DimStyle.C4)} 维。为了方便展示，图中这一步的输出矩阵被转置了；这只是显示方向的变化。`;
     breakAfter();
 
     let t1_process = afterTime(null, 3.0);
 
     breakAfter();
 
-commentary(wt)`
-Next, we apply the GELU activation function to each element of the vector. This is a key part of any neural network, where we introduce some non-linearity into the model. The specific function used, GELU,
-looks a lot like a ReLU function (computed as ${<code>max(0, x)</code>}), but it has a smooth curve rather than a sharp corner.
+commentary(wt)`接着，每个元素经过 _GELU 激活函数_，引入非线性。没有非线性，多层线性变换可以合并为一次线性变换，表达能力就会受限。
 
-${<ReluGraph />}
+GELU 的形状与 ReLU（${<code>max(0, x)</code>}）有些相似，但弯曲处是平滑的，负数部分也不是一律直接归零。
 
-`;
+${<ReluGraph />}`;
     breakAfter();
 
     let t2_process = afterTime(null, 3.0);
 
     breakAfter();
 
-commentary(wt)`
-We then project the vector back down to length ${c_dimRef('C', DimStyle.C)} with another matrix-vector multiplication with bias added.
-`;
+commentary(wt)`再用另一组权重做矩阵乘法并加偏置，把向量缩回 ${c_dimRef('C', DimStyle.C)} 维。恢复原长度，才能与残差通路上的输入逐项相加。`;
     breakAfter();
 
     let t3_process = afterTime(null, 3.0);
 
     breakAfter();
 
-commentary(wt)`
-Like in the self-attention + projection section, we add the result of the MLP to its input, element-wise.
-`;
+commentary(wt)`和注意力子层一样，把 MLP 的结果与它的原始输入逐项相加，完成这条残差连接。`;
     breakAfter();
 
     let t4_process = afterTime(null, 3.0);
 
     breakAfter();
-commentary(wt)`
-We can now repeat this process for all of the columns in the input.`;
+commentary(wt)`对所有位置重复同样的计算。各列使用同一套 MLP 权重，但本步骤不会把不同列彼此混合。`;
 
     breakAfter();
 
@@ -96,9 +80,7 @@ We can now repeat this process for all of the columns in the input.`;
 
     breakAfter();
 
-commentary(wt)`
-And that's the MLP completed. We now have the output of the transformer block, which is ready to be passed to the next block.
-`;
+commentary(wt)`至此，MLP 处理结束，也完成了一个 Transformer 模块。更新后的表示将成为下一个模块的输入。`;
 
     let targetIdx = 3;
     let inputBlk = block.ln2.lnResid;

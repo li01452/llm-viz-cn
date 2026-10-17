@@ -10,6 +10,7 @@ const nextConfig = {
   // Always static HTML export for Cloudflare Pages / any static host.
   // Dev-only file-write tooling lives outside the App Router (see scripts/dev-schematic-api.mjs).
   output: 'export',
+  trailingSlash: true,
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

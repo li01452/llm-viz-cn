@@ -128,8 +128,8 @@ export function LayerView() {
     useEffect(() => {
         let stale = false;
         async function getData() {
-            let dataP = fetchTensorData('gpt-nano-sort-t0-partials.json');
-            let modelP = fetchTensorData('gpt-nano-sort-model.json');
+            let dataP = fetchTensorData('/gpt-nano-sort-t0-partials.json');
+            let modelP = fetchTensorData('/gpt-nano-sort-model.json');
             let nativeBindingsP = loadNativeBindings();
             let [data, model, native] = await Promise.all([dataP, modelP, nativeBindingsP]);
             if (stale) return;
@@ -198,15 +198,15 @@ export function LayerView() {
             ref={setCanvasEl}
         />
         {canvasRender && !canvasRender.progState.render && <div className='absolute flex flex-col items-center w-full h-full justify-center'>
-            <div className='text-2xl'>This application requires a WebGL2 capable browser.</div>
-            <div className='text-lg mt-2'>Please try the latest version of Chrome or Firefox.</div>
+            <div className='text-2xl'>此演示需要浏览器支持 WebGL 2。</div>
+            <div className='text-lg mt-2'>请使用新版 Chrome、Edge、Firefox 或 Safari，并开启硬件加速。</div>
         </div>}
         {/* <div className={s.cursorFollow} style={{ top: pointPos.y, left: pointPos.x }} /> */}
         {canvasRender && <ProgramStateContext.Provider value={canvasRender.progState}>
             <CanvasEventSurface>
                 {/* <MovementControls /> */}
             </CanvasEventSurface>
-            {/* <WelcomePopup /> */}
+            <WelcomePopup />
             {/* <div className="absolute bottom-0 right-0 m-5 bg-white rounded border">
                 <button className='hover:bg-blue-400' onClick={handleCopyCamera}>
                     Copy Camera

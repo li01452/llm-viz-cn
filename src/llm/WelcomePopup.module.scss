@@ -1,6 +1,9 @@
 
 .modalWindow {
-    width: 900px;
+    width: min(1100px, 96vw);
+    max-width: 96vw;
+    max-height: 90dvh;
+    overflow-y: auto;
     overflow: hidden;
     // animation: opacityFadeIn 2s;
 }
@@ -64,3 +67,6 @@
 .infoBtn {
     cursor: pointer;
 }
+.diagram { width: 560px; flex: 0 1 auto; }
+@media(max-width: 700px) { .body { flex-direction: column-reverse; } .diagram { width: 100%; } .header { font-size: 20px; } }
+@media(max-width: 700px) { .diagram { display: none; } .text { font-size: 14px; } }

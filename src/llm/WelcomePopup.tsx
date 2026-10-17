@@ -25,7 +25,7 @@ function hydrateWelcomePopupLS(a?: Partial<IWelcomePopupLS>) {
 export const WelcomePopup: React.FC<{}> = () => {
     let ctx = useContext(WelcomeContext);
     useSubscriptions(ctx.subscriptions);
-    let [welcomeState, setWelcomeState] = useLocalStorageState('welcome-popup', hydrateWelcomePopupLS);
+    let [welcomeState, setWelcomeState] = useLocalStorageState('welcome-popup-zh-v1', hydrateWelcomePopupLS);
 
     useGlobalKeyboard(KeyboardOrder.Modal, ev => {
 
@@ -53,27 +53,25 @@ export const WelcomePopup: React.FC<{}> = () => {
 
     return <ModalWindow className={s.modalWindow} backdropClassName={s.modalWindowBackdrop} onBackdropClick={hide}>
         <div className={s.header}>
-            <div className={s.title}>Welcome!</div>
+            <div className={s.title}>从这里开始</div>
         </div>
         <div className={s.body}>
             {/* <div className={s.image}>
                 <Image src={IntroImage} alt={"LLM diagram"} />
             </div> */}
-            <div style={{ width: 600, flex: '0 0 auto' }}>
+            <div className={s.diagram}>
                 <TocDiagram activePhase={null} onEnterPhase={hide} />
             </div>
             <div className={s.text}>
-                <p>This is an interactive 3D Visualization of a Large Language Model (LLM),
-                    of the likes that powers GPT-3 & ChatGPT.</p>
-                <p>We show a very small model of the same design, to help you understand how
-                    these models work.</p>
-                <p>As well as being interactive, we provide a walkthrough of the model
-                    showing the step-by-step process of how it works, with every single add, multiply &
-                    math operation described.</p>
+                <p>欢迎！这里用一个真正运行的字母排序模型，演示 GPT 风格模型的推理过程。</p>
+                <p>第一次使用：先看“全程概览”，按空格键或“继续播放”逐步观看；再点击目录进入各个模块。</p>
+                <p>拖动视图旋转，滚轮缩放。悬停格子或彩色术语，观察计算来源与高亮。</p>
+                <p>蓝色是学好的权重，绿色是计算中的数值。完整数值演示使用 nano-gpt；较大模型主要展示结构规模。</p>
+                <p>本模型只学过 A、B、C 排序，不能聊天，也不代表所有大模型的完整实现。</p>
             </div>
         </div>
         <div className={s.footer}>
-            <button className={s.button} onClick={hide}>Get Started</button>
+            <button className={s.button} onClick={hide}>开始探索</button>
         </div>
     </ModalWindow>;
 };
@@ -92,7 +90,7 @@ let WelcomeContext = createContext(new WelcomeManager());
 export const InfoButton: React.FC<{}> = () => {
     let ctx = useContext(WelcomeContext);
 
-    return <div onClick={() => ctx.showWelcomeDialog()} className={s.infoBtn}>
+    return <button type="button" aria-label="查看入门引导" title="查看入门引导" onClick={() => ctx.showWelcomeDialog()} className={s.infoBtn}>
         <FontAwesomeIcon icon={faCircleQuestion} />
-    </div>;
+    </button>;
 };

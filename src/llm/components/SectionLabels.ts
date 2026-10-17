@@ -20,7 +20,7 @@ export function drawBlockLabels(state: IRenderState, layout: IGptModelLayout) {
         let color = baseColor.mul(layout.embedLabel.visible);
         let tl = new Vec3(layout.tokEmbedObj.x - layout.margin * 2, layout.tokEmbedObj.y, 0);
         let br = new Vec3(layout.tokEmbedObj.x - layout.margin * 2, layout.tokEmbedObj.y + layout.tokEmbedObj.dy, 0);
-        drawSectionLabel(state, "Embedding", tl, br, { color, fontSize: 6, pad: 4 });
+        drawSectionLabel(state, "嵌入", tl, br, { color, fontSize: 6, pad: 4 });
     }
 
     let transformerIdx = 0;
@@ -42,14 +42,14 @@ export function drawBlockLabels(state: IRenderState, layout: IGptModelLayout) {
             let color = baseColor.mul(block.mlpResidual.opacity * block.transformerLabel.visible);
             let tl = new Vec3(blockLeft, blockTop, 0);
             let br = new Vec3(blockLeft, blockBottom, 0);
-            drawSectionLabel(state, `Transformer ${transformerIdx}`, tl, br, { color, fontSize: 26 });
+            drawSectionLabel(state, `Transformer 模块 ${transformerIdx}`, tl, br, { color, fontSize: 26 });
         }
 
         {
             let color = baseColor.mul(block.attnResidual.opacity * block.selfAttendLabel.visible);
             let tl = new Vec3(attnLeft, blockTop, 0);
             let br = new Vec3(attnLeft, attnProjBot, 0);
-            drawSectionLabel(state, `Self-attention`, tl, br, { color, fontSize: 12 });
+            drawSectionLabel(state, `自注意力`, tl, br, { color, fontSize: 12 });
         }
 
         {
@@ -63,7 +63,7 @@ export function drawBlockLabels(state: IRenderState, layout: IGptModelLayout) {
             let color = baseColor.mul(block.attnOut.opacity * block.projLabel.visible);
             let tl = new Vec3(attnLabelLeft, attnProjTop, 0);
             let br = new Vec3(attnLabelLeft, attnProjBot, 0);
-            drawSectionLabel(state, `Projection`, tl, br, { color, fontSize: 10 });
+            drawSectionLabel(state, `投影`, tl, br, { color, fontSize: 10 });
         }
 
         let headIdx = 0;
@@ -78,7 +78,7 @@ export function drawBlockLabels(state: IRenderState, layout: IGptModelLayout) {
                     br = new Vec3(attnLabelLeft, head.vOutBlock.y + head.vOutBlock.dy, head.vOutBlock.z + head.vOutBlock.dz / 2);
                 }
 
-                drawSectionLabel(state, `Head ${headIdx}`, tl, br, { color, fontSize: 10 });
+                drawSectionLabel(state, `注意力头 ${headIdx}`, tl, br, { color, fontSize: 10 });
             }
 
 

@@ -59,7 +59,7 @@ export function drawModelCard(state: IProgramState, layout: IGptModelLayout, tit
 
     // layout.weightCount = 150000000000;
 
-    let nParamsText = `n_params = `;
+    let nParamsText = `参数量 = `;
     let weightCountText = numberToCommaSep(layout.weightCount);
 
     let weightSize = 8;
@@ -283,7 +283,7 @@ function renderInputAtTop(state: IProgramState) {
 
     renderInputBoxes(state, layout, tl, br, inCellW, 4, lineOpts, { tokMixes: state.display.tokenColors, idxMixes: state.display.tokenIdxColors });
 
-    let inputTitle = "Input";
+    let inputTitle = "输入";
     drawText(render.modelFontBuf, inputTitle, tl.x, tl.y - lineHeight(titleTextOpts), titleTextOpts);
 
     {
@@ -292,7 +292,7 @@ function renderInputAtTop(state: IProgramState) {
         let outTl = new Vec3(tl.x, outBr.y - outCellH);
         renderOutputBoxes(state, layout, outTl, outBr, inCellW, 4, lineOpts, { opacity: outputOpacity, boldLast: outputOpacity < 1.0, tokMixes: state.display.tokenOutputColors });
 
-        let outputTitle = "Output";
+        let outputTitle = "输出";
         let outputTextOpts = { ...titleTextOpts, color: titleTextOpts.color.mul(outputOpacity) };
         drawText(render.modelFontBuf, outputTitle, outTl.x, outTl.y - lineHeight(titleTextOpts), outputTextOpts);
     }

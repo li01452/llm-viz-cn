@@ -85,23 +85,23 @@ export function initWalkthrough() {
         phaseTransitiveData: null as any,
         phaseList: [{
             groupId: PhaseGroup.Intro,
-            title: 'Introduction',
+            title: '入门导览',
             phases: [
-                { id: Phase.Intro_Intro, title: 'Overview' },
-                { id: Phase.Intro_Prelim, title: 'Preliminary' },
+                { id: Phase.Intro_Intro, title: '全程概览' },
+                { id: Phase.Intro_Prelim, title: '开始前须知' },
             ],
         }, {
             groupId: PhaseGroup.Detailed_Input,
-            title: 'Detailed',
+            title: '逐步拆解',
             phases: [
-                { id: Phase.Input_Detail_Embedding, title: 'Embedding' },
-                { id: Phase.Input_Detail_LayerNorm, title: 'Layer Norm' },
-                { id: Phase.Input_Detail_SelfAttention, title: 'Self Attention' },
-                { id: Phase.Input_Detail_Projection, title: 'Projection' },
-                { id: Phase.Input_Detail_Mlp, title: 'MLP' },
+                { id: Phase.Input_Detail_Embedding, title: '嵌入' },
+                { id: Phase.Input_Detail_LayerNorm, title: '层归一化' },
+                { id: Phase.Input_Detail_SelfAttention, title: '自注意力' },
+                { id: Phase.Input_Detail_Projection, title: '投影与残差' },
+                { id: Phase.Input_Detail_Mlp, title: '前馈网络 MLP' },
                 { id: Phase.Input_Detail_Transformer, title: 'Transformer' },
                 { id: Phase.Input_Detail_Softmax, title: 'Softmax' },
-                { id: Phase.Input_Detail_Output, title: 'Output' },
+                { id: Phase.Input_Detail_Output, title: '输出与生成' },
             ],
         }] as IPhaseGroup[],
     };
@@ -201,7 +201,7 @@ export function walkthroughDetailed(args: IWalkthroughArgs) {
 
     case Phase.Input_First: {
         let t0 = c_str('', 0);
-        let c = commentary`These vectors now pass through the stages of the model, going through a series of transformers.${t0}`;
+        let c = commentary`这些向量将依次通过多个 Transformer 模块。${t0}`;
         let t1 = atEvent(t0);
         let t1a = afterTime(t1, 0.0, 2.0);
         let t2 = afterTime(t1a, 5, 0.2);
@@ -269,7 +269,7 @@ export function walkthroughDetailed(args: IWalkthroughArgs) {
     } break;
     case Phase.Input_Detail_TokEmbed: {
         let tStr = c_str('t', 1);
-        let c = commentary`Let's start at the top. To compute the vectors at each time ${tStr} we do a couple of steps:`;
+        let c = commentary`从顶部开始：计算位置 ${tStr} 的向量，需要下面几步：`;
 
         moveCameraTo(state, atTime(0), new Vec3(0, 0, 0), new Vec3());
 
@@ -298,9 +298,11 @@ export function walkthroughDetailed(args: IWalkthroughArgs) {
             splitGrid(layout, layout.idxObj   , Dim.X, idx + 0.5, split);
         }
 
-        let embedMtx = c_str('token embedding matrix');
+        let embedMtx = c_str('词元嵌入矩阵');
         let tokCol = c_str('j');
-        commentaryPara(c)`\n\n1. From the ${embedMtx}, select the ${tokCol}'th column.`;
+        commentaryPara(c)`
+
+1. 从${embedMtx}中取出编号为 ${tokCol} 的列。`;
 
         let embedOffColor = new Vec4(0.5,0.5,0.5).mul(0.6);
 

@@ -58,10 +58,10 @@ export function walkthroughIntro(args: IWalkthroughArgs) {
 
     setInitialCamera(state, new Vec3(184.744, 0.000, -636.820), new Vec3(296.000, 16.000, 13.500));
 
-    let c0 = commentary(wt, null, 0)`Welcome to the walkthrough of the GPT large language model! Here we'll explore the model _nano-gpt_, with a mere 85,000 parameters.
+    let c0 = commentary(wt, null, 0)`欢迎来到大模型可视化！这里运行的是一个约 8.5 万参数的小型 GPT 模型。参数是训练中学到的数字，决定模型怎样处理输入。
 
-Its goal is a simple one: take a sequence of six letters: ${embed(ExampleInputOutput)}
-and sort them in alphabetical order, i.e. to "ABBBCC".`;
+它的任务很简单：读取六个字母：${embed(ExampleInputOutput)}
+再按字母顺序逐个输出，得到 ABBBCC。先看懂这条流程，再研究每一步怎么算。`;
 
     if (c0.t > 0) {
         for (let cube of layout.cubes) {
@@ -93,12 +93,12 @@ and sort them in alphabetical order, i.e. to "ABBBCC".`;
 
     breakAfter();
 
-    let tokenStr = c_str('_token_', 0, DimStyle.Token);
-    let tokenIdxStr = c_str('_token index_', 0, DimStyle.TokenIdx);
+    let tokenStr = c_str('_词元（token）_', 0, DimStyle.Token);
+    let tokenIdxStr = c_str('_词元编号_', 0, DimStyle.TokenIdx);
 
-    commentary(wt, t6)`We call each of these letters a ${tokenStr}, and the set of the model's different tokens make up its _vocabulary_:${embed(TokenVocab)}
+    commentary(wt, t6)`模型处理的基本单位叫${tokenStr}。在这个例子里，一个字母就是一个词元；在文本模型里，词元可能是字、词的一部分或标点。所有可用词元构成_词表_：${embed(TokenVocab)}
 
-    From this table, each token is assigned a number, its ${tokenIdxStr}. And now we can enter this sequence of numbers into the model:${embed(ExampleTokenValues)}\n`;
+模型先把词元变成编号，即${tokenIdxStr}。编号只是查表用的标识，没有大小或语义关系。输入现在变成：${embed(ExampleTokenValues)}`;
     breakAfter();
 
     let t7 = afterTime(null, 1.5, 0.5);
@@ -129,8 +129,8 @@ and sort them in alphabetical order, i.e. to "ABBBCC".`;
 
     breakAfter();
 
-    let c5 = commentary(wt)`In the 3d view, each green cell represents a number being processed, and each blue cell is a weight. ${embed(GreenBlueCells)}
-    Each number in the sequence first gets turned into a 48 element vector (a size chosen for this particular model). This is called an _embedding_.`;
+    let c5 = commentary(wt)`三维图中，绿色格子表示计算中的数值，蓝色格子表示训练得到的权重。${embed(GreenBlueCells)}
+每个输入编号会先变成由 48 个数字组成的列表，也就是 48 维向量。这种表示叫_嵌入（embedding）_。48 是本演示选择的维度，并非所有模型都相同。`;
     breakAfter(c5);
 
     {
@@ -166,7 +166,7 @@ and sort them in alphabetical order, i.e. to "ABBBCC".`;
     }
 
     breakAfter();
-    commentary(wt)`The embedding is then passed through the model, going through a series of layers, called transformers, before reaching the bottom.`;
+    commentary(wt)`嵌入向量依次通过多个 _Transformer 模块_，不断更新表示，最后到达图的底部。先跟随动画观察数据流向，不必记住每个公式。`;
     breakAfter();
 
     {
@@ -220,11 +220,9 @@ and sort them in alphabetical order, i.e. to "ABBBCC".`;
         }
     }
 
-    commentary(wt)`So what's the output? A prediction of the next token in the sequence. So at the 6th entry, we get probabilities that the next token is
-        going to be 'A', 'B', or 'C'.`
+    commentary(wt)`模型最终输出什么？它会给下一个词元打分，并转换成概率。这里看第六个位置的输出：接下来是 A、B、C 的概率各有多大？它并不是一次直接输出整个排序结果。`
 
-    commentary(wt)`In this case, the model is pretty sure it's going to be 'A'. Now, we can feed this prediction back into the top of the model, and repeat
-    the entire process.`;
+    commentary(wt)`这次模型给 A 的概率很高。选出下一个字母后，把它接到输入后面，再运行一遍。这样逐个生成词元的过程，叫_自回归生成_。聊天模型生成长回答时也使用这一基本思路。`;
 
     breakAfter();
 }
@@ -393,10 +391,10 @@ const TokenVocab: React.FC = () => {
         <table className={s.table}>
             <tbody>
                 <tr className={s.tokString} style={{ color: dimStyleColor(DimStyle.Token).toHexColor() }}>
-                    <th>token</th><td>A</td><td>B</td><td>C</td>
+                    <th>词元</th><td>A</td><td>B</td><td>C</td>
                 </tr>
                 <tr className={s.tokIndex} style={{ color: dimStyleColor(DimStyle.TokenIdx).toHexColor() }}>
-                    <th>index</th><td>0</td><td>1</td><td>2</td>
+                    <th>编号</th><td>0</td><td>1</td><td>2</td>
                 </tr>
             </tbody>
         </table>
@@ -416,12 +414,12 @@ const GreenBlueCells: React.FC = () => {
             <div className={s.cellInfoCol}>
                 <Cell nums={greenNums} color={greenColor} mul={0.5} />
                 <Graph nums={greenNums} color={greenColor} setNums={setGreenNums} />
-                <div className={s.cellInfoText}>being processed</div>
+                <div className={s.cellInfoText}>计算中数值</div>
             </div>
             <div className={s.cellInfoCol}>
                 <Cell nums={blueNums} color={blueColor} mul={1} />
                 <Graph nums={blueNums} color={blueColor} setNums={setBlueNums} />
-                <div className={s.cellInfoText}>weights</div>
+                <div className={s.cellInfoText}>训练所得权重</div>
             </div>
         </div>
     </div>

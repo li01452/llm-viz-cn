@@ -11,9 +11,9 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return <html lang="en" className={s.html}>
+    return <html lang="zh-CN" className={s.html}>
         <head>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&family=Merriweather:ital@0;1&display=optional" />
+            <meta name="theme-color" content="#172554" />
         </head>
         <body className={s.body}>{children}</body>
     </html>;

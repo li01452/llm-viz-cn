@@ -59,17 +59,17 @@ export const ModelSelectorToolbar: React.FC<{
     }
 
     return <div className='absolute top-0 left-0 flex flex-col'>
-        <div className='mt-2 ml-2 flex flex-row'>
+        <div className='mt-2 ml-2 flex flex-row flex-wrap'>
             {makeButton(0)}
             {makeButton(-1)}
             {makeButton(1)}
             {makeButton(2)}
         </div>
         <div className='ml-2 flex flex-row'>
-            <div className={clsx('m-2 p-2 bg-white min-w-[2rem] flex justify-center rounded shadow cursor-pointer hover:bg-blue-300')} onClick={onExpandClick}>
+            <div className={clsx('m-2 p-2 bg-white min-w-[2rem] flex justify-center rounded shadow cursor-pointer hover:bg-blue-300')} role="button" tabIndex={0} title="查看完整模型" aria-label="查看完整模型" onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onExpandClick(); } }} onClick={onExpandClick}>
                 <FontAwesomeIcon icon={faExpand} />
             </div>
-            <div className={clsx('m-2 p-2 bg-white min-w-[2rem] flex justify-center rounded shadow cursor-pointer hover:bg-blue-300')} onClick={onMagnifyClick}>
+            <div className={clsx('m-2 p-2 bg-white min-w-[2rem] flex justify-center rounded shadow cursor-pointer hover:bg-blue-300')} role="button" tabIndex={0} title="放大输入区域" aria-label="放大输入区域" onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onMagnifyClick(); } }} onClick={onMagnifyClick}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
             </div>
         </div>

@@ -11,42 +11,18 @@ export function walkthrough09_Output(args: IWalkthroughArgs) {
 
     setInitialCamera(state, new Vec3(-20.203, 0.000, -1642.819), new Vec3(281.600, -7.900, 2.298));
 
-    let c0 = commentary(wt, null, 0)`
+    let c0 = commentary(wt, null, 0)`到达模型末尾后，最后一个 Transformer 模块的输出先经过层归一化，再做一次不加偏置的线性变换。
 
-Finally, we come to the end of the model. The output of the final transformer block is passed through
-a layer normalization, and then we use a linear transformation (matrix multiplication), this time without a bias.
+这一步把每个位置的 C 维向量变成词表大小 n_vocab 维的向量：词表里的每个候选词元各得一个原始分数，叫 _logits_。分数可以是负数，也不需要总和为 1；它们本身不是概率。
 
-This final transformation takes each of our column vectors from length C to length nvocab. Hence,
-it's effectively producing a score for each word in the vocabulary for each of our columns. These
-scores have a special name: logits.
+通过 Softmax，分数才变成各词元的预测概率。本例词表只有 A、B、C，任务也很小，因此往往有一个候选字母的概率特别高。这并不表示模型永远正确。
 
-The name "logits" comes from "log-odds," i.e., the logarithm of the odds of each token. "Log" is
-used because the softmax we apply next does an exponentiation to convert to "odds" or probabilities.
+生成时使用最后一个有效输入位置的概率。例如输入六个词元，就看第六列的输出，从中选出第七个词元。选完接到输入后面，再进行下一轮推理。
 
-To convert these scores into nice probabilities, we pass them through a softmax operation. Now, for
-each column, we have a probability the model assigns to each word in the vocabulary.
+一种选择方法是_按概率采样_：概率为 0.9 的词元，在大量重复抽样中大约有 90% 的机会被选到。另一种方法是每次都选概率最高的词元，即贪心选择。高概率也不等于事实正确。
 
-In this particular model, it has effectively learned all the answers to the question of how to sort
-three letters, so the probabilities are heavily weighted toward the correct answer.
+_温度（temperature）_用于调整分布：在 Softmax 前，把 logits 除以一个正的温度值。温度较高时分布通常更平缓；较低时更集中于高分项。它改变选择的随机程度，并不会凭空增加知识。温度为 0 通常表示使用贪心选择的特殊约定，不能直接代入除法。
 
-When we're stepping the model through time, we use the last column's probabilities to determine the
-next token to add to the sequence. For example, if we've supplied six tokens into the model, we'll
-use the output probabilities of the 6th column.
-
-This column's output is a series of probabilities, and we actually have to pick one of them to use
-as the next in the sequence. We do this by "sampling from the distribution." That is, we randomly
-choose a token, weighted by its probability. For example, a token with a probability of 0.9 will be
-chosen 90% of the time.
-
-There are other options here, however, such as always choosing the token with the highest probability.
-
-We can also control the "smoothness" of the distribution by using a temperature parameter. A higher
-temperature will make the distribution more uniform, and a lower temperature will make it more
-concentrated on the highest probability tokens.
-
-We do this by dividing the logits (the output of the linear transformation) by the temperature before
-applying the softmax. Since the exponentiation in the softmax has a large effect on larger numbers,
-making them all closer together will reduce this effect.
-`;
+这解释了生成的基本过程，并不表示本页面提供了所有采样设置。现在回到概览，把“词元 → 向量 → 多层加工 → 分数 → 概率 → 下一个词元”连成一条完整路径。`;
 
 }

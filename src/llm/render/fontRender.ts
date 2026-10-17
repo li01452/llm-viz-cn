@@ -67,9 +67,9 @@ export async function fetchFontAtlasData(): Promise<IFontAtlasData> {
         imgEl.onload = () => resolve(imgEl);
         imgEl.onerror = () => reject();
     });
-    imgEl.src = 'fonts/font-atlas.png';
+    imgEl.src = '/fonts/font-atlas.png';
 
-    let fontDefP = fetch('fonts/font-def.json', { credentials: 'include', mode: 'no-cors' }).then(r => r.json());
+    let fontDefP = fetch('/fonts/font-def.json', { credentials: 'include', mode: 'no-cors' }).then(r => r.json());
 
     let [fontAtlasImage, fontDef] = await Promise.all([imgP, fontDefP]);
 
@@ -183,9 +183,9 @@ export function setupFontAtlas(ctx: IGLContext, data: IFontAtlasData) {
         for (let i = 0; i < numChars; i++) {
             let offset = i * perCharSize;
             let char: ICharDef = {
-                id: charArr[offset + 0],
+                id: charArr[offset + 0] & 0xffff,
                 index: charArr[offset + 1],
-                char: String.fromCharCode(charArr[offset + 2]),
+                char: String.fromCharCode(charArr[offset + 2] & 0xffff),
                 x: charArr[offset + 3],
                 y: charArr[offset + 4],
                 width: charArr[offset + 5],

@@ -18,23 +18,15 @@ export function walkthrough01_Prelim(args: IWalkthroughArgs) {
 
     setInitialCamera(state, new Vec3(184.744, 0.000, -636.820), new Vec3(296.000, 16.000, 13.500));
 
-    let c0 = commentary(wt, null, 0)`
-Before we delve into the algorithm's intricacies, let's take a brief step back.
+    let c0 = commentary(wt, null, 0)`继续之前，先分清两个概念。
 
-This guide focuses on _inference_, not training, and as such is only a small part of the entire machine-learning process.
-In our case, the model's weights have been pre-trained, and we use the inference process to generate output. This runs directly in your browser.
+_训练_：用大量例子调整权重，让模型学会规律。_推理_：固定已经学好的权重，输入新数据并计算输出。本网页演示的是推理，计算直接在浏览器中进行。观看动画不会重新训练模型。
 
-The model showcased here is part of the GPT (generative pre-trained transformer) family, which can be described as a "context-based token predictor".
-OpenAI introduced this family in 2018, with notable members such as GPT-2, GPT-3, and GPT-3.5 Turbo, the latter being the foundation of the widely-used ChatGPT.
-It might also be related to GPT-4, but specific details remain unknown.
+这里采用 GPT 风格的、仅含解码器的 Transformer：根据已有的词元预测下一个词元。小模型与许多语言模型共享基本计算结构，但本例只学过字母排序，不能聊天。更大的结构视图主要用于比较规模，没有加载对应大模型的真实权重。也不能据此认定所有新模型的内部实现完全相同。
 
-This guide was inspired by the ${embedLink('minGPT', minGptLink)} GitHub project, a minimal GPT implementation in ${embedLink('PyTorch', pytorchLink)}
-created by ${embedLink('Andrej Karpathy', andrejLink)}.
-His YouTube series ${embedLink("Neural Networks: Zero to Hero", zeroToHeroLink)} and the minGPT project have been invaluable resources in the creation of this
-guide. The toy model featured here is based on one found within the minGPT project.
+本演示源于 ${embedLink('Andrej Karpathy', andrejLink)} 的 ${embedLink('minGPT', minGptLink)} 项目，它用 ${embedLink('PyTorch', pytorchLink)} 实现了简洁的 GPT。其 ${embedLink("Neural Networks: Zero to Hero", zeroToHeroLink)} 视频课程也是原作者的重要参考。
 
-Alright, let's get started!
-`;
+建议先看“全程概览”，再按嵌入 → 层归一化 → 自注意力 → 投影与残差 → 前馈网络 → 输出的顺序学习。遇到公式，先问：输入是什么？输出是什么？这一步改变了什么？`;
 
 }
 
