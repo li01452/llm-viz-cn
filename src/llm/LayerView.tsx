@@ -1,4 +1,5 @@
 'use client';
+import { publicAsset } from '@/src/utils/publicAsset';
 
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { IDataAndModel, IModelState, initModel } from './GptModel';
@@ -128,8 +129,8 @@ export function LayerView() {
     useEffect(() => {
         let stale = false;
         async function getData() {
-            let dataP = fetchTensorData('/gpt-nano-sort-t0-partials.json');
-            let modelP = fetchTensorData('/gpt-nano-sort-model.json');
+            let dataP = fetchTensorData(publicAsset('gpt-nano-sort-t0-partials.json'));
+            let modelP = fetchTensorData(publicAsset('gpt-nano-sort-model.json'));
             let nativeBindingsP = loadNativeBindings();
             let [data, model, native] = await Promise.all([dataP, modelP, nativeBindingsP]);
             if (stale) return;

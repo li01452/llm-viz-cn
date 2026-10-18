@@ -4,6 +4,8 @@
 
 基于 [Brendan Bycroft 的 LLM Visualization](https://github.com/bbycroft/llm-viz) 制作。中文版本面向第一次接触神经网络的读者，翻译界面与讲解，增加入门首页、学习路线和术语说明。
 
+**在线学习：** https://li01452.github.io/llm-viz-cn/ （首次开启 GitHub Pages 后生效）
+
 ![大模型三维可视化](public/images/llm-viz-screenshot.jpg)
 
 ## 能学到什么
@@ -51,7 +53,7 @@
 需要 Node.js 20.9 或更高版本。
 
 ```bash
-npm install --legacy-peer-deps
+npm ci --legacy-peer-deps --ignore-scripts
 npm run dev
 ```
 
@@ -68,7 +70,29 @@ npm run build
 python3 -m http.server 3003 --directory out
 ```
 
-然后打开 `http://localhost:3003`。本仓库尚未配置在线部署。
+然后打开 `http://localhost:3003`。
+
+## GitHub Pages 自动部署
+
+仓库已配置 [自动构建与部署流程](.github/workflows/pages.yml)。推送到 `main` 后会运行类型检查、构建静态网页并部署。
+
+首次启用：进入仓库 **Settings → Pages → Build and deployment → Source**，选择 **GitHub Actions**。这一步只需操作一次。如果首次部署在启用前失败，进入 **Actions → Deploy Chinese website to GitHub Pages → Re-run failed jobs** 重试。
+
+- 中文首页：https://li01452.github.io/llm-viz-cn/
+- 三维演示：https://li01452.github.io/llm-viz-cn/llm/
+- 工作流设置 `NEXT_PUBLIC_BASE_PATH=/llm-viz-cn`，同时用于 Next.js 路由、脚本与模型、字体、WASM 资源，保证仓库子路径下正常加载。
+- 本地开发默认使用域名根路径。若部署到其他仓库名，修改工作流的 `NEXT_PUBLIC_BASE_PATH`。
+
+本地模拟 GitHub Pages 构建：
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/llm-viz-cn npm run build
+mkdir -p /tmp/llm-pages-preview/llm-viz-cn
+cp -R out/. /tmp/llm-pages-preview/llm-viz-cn/
+python3 -m http.server 3003 --directory /tmp/llm-pages-preview
+```
+
+打开 `http://localhost:3003/llm-viz-cn/`，即可检查与线上相同的路径。
 
 ### 中文三维字体维护
 
